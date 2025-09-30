@@ -1,0 +1,55 @@
+# files to compare and other necessary info
+
+
+datasets:
+  NanoV9:
+    - /DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2/NANOAODSIM
+  NanoV15Light:
+    - /DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/CMSSW_15_0_7-131X_upgrade2018_realistic_v3_RV270_MiniToMini_MCRunIISummer20UL18-v1/NANOAODSIM
+
+limit_nfiles: 10
+
+columns_to_keep:
+  - event
+  #- run
+  #- luminosityBlock
+  #- LHEPart
+  - HLT
+  - Tau
+  #- GenVisTau
+  #- genWeight
+  #- PuppiMET
+
+
+calibrateEvents: yes
+selectEvents: yes
+
+selections:
+  trigger:
+    HLT-IsoMu24: "IsoMu24 == True"
+    #HLT-DoubleMediumDeepTauPFTauHPS35_L2NN_eta2p1: "DoubleMediumDeepTauPFTauHPS35_L2NN_eta2p1 == True"
+    #HLT-DoubleMediumDeepTauPFTauHPS30_L2NN_eta2p1_PFJet60: "DoubleMediumDeepTauPFTauHPS30_L2NN_eta2p1_PFJet60 == True"
+
+  tau:
+    Tau-pt: "pt > 20.0"
+    Tau-eta: "abs(eta) < 2.3"
+    Tau-dz: "abs(dz) < 0.2"
+    Tau-decayMode: "((decayMode == 0) | (decayMode == 1) | (decayMode == 10) | (decayMode == 11)) & (decayMode != 5) & (decayMode != 6)"
+    Tau-genPartFlav: "(genPartFlav == 0) | (genPartFlav == 5)"
+    Tau-rawIso: "(rawIso >= 0.0) & (rawIso < 2.5)"
+
+columns_to_plot:
+  Tau-pt : [60, 20, 200]
+  Tau-eta : [25, -2.5, 2.5]
+  Tau-phi : [32, -3.2, 3.2]
+  Tau-mass : [60, 0, 3]
+  Tau-decayMode : [12, -0.5, 11.5]
+  #Tau-rawDeepTau2018v2p5VSe : [50, 0, 1]
+  #Tau-rawDeepTau2018v2p5VSmu : [50, 0, 1]
+  #Tau-rawDeepTau2018v2p5VSjet : [50, 0, 1]
+  #Tau-charge : [4, -2, 2]
+  Tau-leadTkPtOverTauPt: [50, 0, 1]
+  #Tau-rawIso: [34, -2.0, 15.0]
+
+
+output: /afs/cern.ch/work/g/gsaha/public/IPHC/Work/TauCQM/NANOv15LightValidation/Plots_Compare_v9_v15L_genmatch_0_5

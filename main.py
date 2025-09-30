@@ -85,7 +85,15 @@ def get_selection_mask(events, selections):
     mask_return = None
     for i,(field,cut) in enumerate(selections.items()):
         fields = field.split('-')
-        mask = apply_selection(events, fields[0], fields[1], cut)
+        object   = fields[0]
+        variable = fields[1]
+        if 'idDeepTau2018v2p5VS' in variable:
+            if variable not in events[object].fields:
+                #print(f"WARNING: {variable} is not found in {object} ... using old version instead")
+                variable = variable.replace('idDeepTau2018v2p5VS', 'idDeepTau2017v2p1VS')
+                cut = cut.replace('idDeepTau2018v2p5VS', 'idDeepTau2017v2p1VS')
+            
+        mask = apply_selection(events, object, variable, cut)
         mask_return = mask if i == 0 else mask & mask_return
 
     return mask_return
@@ -226,7 +234,7 @@ def dohist(data1, data2,
     
     #plt.tight_layout()
     plt.subplots_adjust(hspace=0.2)
-    hname = f"{outdir}/{title}_log.pdf" if logy == True else f"{outdir}/{title}.pdf"
+    hname = f"{outdir}/{title}_log.png" if logy == True else f"{outdir}/{title}.png"
     fig.savefig(hname, dpi=300)
     plt.close()
     
@@ -246,12 +254,18 @@ def __process_file(file, cfg, nano_key):
     local_plot_dict = {nano_key: {}}
     for plot_var in columns_to_plot.keys():
         obj_fld = plot_var.split('-')
-        array = events[obj_fld[0]][obj_fld[1]]
+        obj = obj_fld[0]
+        fld = obj_fld[1]
+        if fld not in events[obj].fields:
+            #print(f"WARNING: {fld} is not found in events.{obj} fields")
+            if 'DeepTau2018v2p5VS' in fld:
+                fld = fld.replace('DeepTau2018v2p5VS', 'DeepTau2017v2p1VS')
+        array = events[obj][fld]
         local_plot_dict[nano_key][plot_var] = array # awkard array can’t be pickled
     
     return local_plot_dict
 
-            
+
     
 
 def main():
